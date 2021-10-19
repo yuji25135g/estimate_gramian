@@ -1,4 +1,4 @@
-function [state_x, reshape_y, index, A] = data_gen_diag(size_a, time, samplingWidth)
+function [state_x, reshape_y, index, A] = data_gen_triangle(size_a, time, samplingWidth)
 
     %{
         As—ñ‚ª—^‚¦‚ç‚ê‚½‚Æ‚«
@@ -9,7 +9,7 @@ function [state_x, reshape_y, index, A] = data_gen_diag(size_a, time, samplingWi
     %}
    
     %As—ñ‚Ì¶¬
-    A = diagA_gen(size_a);
+    A = triangularA_gen(size_a);
     
     %As—ñ‚©‚çó‘Ô‚ğ¶¬
     x0 = [1,1]';

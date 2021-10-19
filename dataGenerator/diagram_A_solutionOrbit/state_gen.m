@@ -1,4 +1,4 @@
-function x = state_gen(size_a, time, A, samplingWidth, x0)
+function x = state_gen(size_a, time, A, samplingWidth)
 
     %{
         —^‚¦‚ç‚ê‚½As—ñ‚É‘Î‚·‚éó‘Ô‹O“¹‚ğ1‚Â•Ô‚µ‚Ü‚·
@@ -8,7 +8,7 @@ function x = state_gen(size_a, time, A, samplingWidth, x0)
     
     %‰Šúó‘Ô
     %x0 = [1,1]';
-    %x0 = 2*rand(size_a, 1) -1;
+    x0 = 2*rand(size_a, 1) -1;
     
     
     

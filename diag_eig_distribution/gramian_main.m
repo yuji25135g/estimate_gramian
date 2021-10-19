@@ -6,7 +6,7 @@ N_x：リザバーのノード数
 
 
 %データの読み込み
-load('dataset1_from_diag')
+load('dataset45_from_diag')
 
 %{
 %データのスケーリング
@@ -132,10 +132,15 @@ end
 classified = [];
 unclassified = [];
 for i=1: T_test/time
-    if test_label(:,i)==pre_test(:,i)
-        classified = cat(3,classified,test_A(:,:,i));
+    if mod(i,2) == 0
+        j = i/2;
     else
-        unclassified = cat(3,unclassified,test_A(:,:,i));
+        j = (i+1)/2;
+    end
+    if test_label(:,i)==pre_test(:,i)
+        classified = cat(3,classified,test_A(:,:,j));
+    else
+        unclassified = cat(3,unclassified,test_A(:,:,j));
     end
 end
 
@@ -148,4 +153,6 @@ for i=1: size_unclassified(1,3)
     plot_x = [plot_x, unclassified(1,1,i)];
     plot_y = [plot_y, unclassified(2,2,i)];
 end
+figure()
 plot(plot_x, plot_y, 'o')
+

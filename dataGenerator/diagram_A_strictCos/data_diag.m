@@ -11,6 +11,8 @@ size_a：A行列のサイズ
 time：1データあたりのサンプリング数
 samplingWidth：サンプリング幅
 
+システムの
+
 %}
 
 clear()
@@ -22,7 +24,7 @@ train_D = [];
 train_A = [];
 samplingWidth = 0.1;
 for i = 1: trainData_num
-    [u, ~, d, A] = data_gen_diag(size_a, time, samplingWidth);
+    [u, ~, d, A] = data_gen_diag_strictCos(size_a, time, samplingWidth);
     %A行列のデータ生成
     train_A(:,:,i) = A;
     %入力データの成型
@@ -41,7 +43,7 @@ test_U = [];
 test_D = [];
 test_A = [];
 for i = 1: testData_num
-    [u, ~, d, A] = data_gen_diag(size_a, time, samplingWidth);
+    [u, ~, d, A] = data_gen_diag_strictCos(size_a, time, samplingWidth);
     %A行列のデータ生成
     test_A(:,:,i) = A;
    %入力データの成型

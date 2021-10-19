@@ -14,7 +14,7 @@ samplingWidth：サンプリング幅
 %}
 
 clear()
-trainData_num = 600;
+trainData_num = 500;
 size_a = 2;
 time = 20;
 train_U = [];
@@ -22,14 +22,15 @@ train_D = [];
 train_A = [];
 samplingWidth = 0.1;
 for i = 1: trainData_num
-    [u, ~, d, A] = data_gen_diag(size_a, time, samplingWidth);
+    [u, ~, d, A] = data_gen_diag_doubleState(size_a, time, samplingWidth);
     %A行列のデータ生成
     train_A(:,:,i) = A;
     %入力データの成型
     train_U = [train_U, u];
     %目標出力データの成型
+    size_u = size(u);
     D = [];
-    for j = 1: time
+    for j = 1: size_u(1,2)
         D = [D, d];
     end
     train_D = [train_D, D];
@@ -47,8 +48,9 @@ for i = 1: testData_num
    %入力データの成型
     test_U = [test_U, u];
     %目標出力データの成型
+     size_u = size(u);
     D = [];
-    for j = 1: time
+    for j = 1: size_u(1,2)
         D = [D, d];
     end
     test_D = [test_D, D];
