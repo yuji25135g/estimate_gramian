@@ -6,8 +6,7 @@ N_x：リザバーのノード数
 
 
 %データの読み込み
-load('dataset45_from_diag')
-
+load('dataset6')
 %{
 %データのスケーリング
 data_scale = 10^-3;
@@ -132,15 +131,10 @@ end
 classified = [];
 unclassified = [];
 for i=1: T_test/time
-    if mod(i,2) == 0
-        j = i/2;
-    else
-        j = (i+1)/2;
-    end
     if test_label(:,i)==pre_test(:,i)
-        classified = cat(3,classified,test_A(:,:,j));
+        classified = cat(3,classified,test_A(:,:,i));
     else
-        unclassified = cat(3,unclassified,test_A(:,:,j));
+        unclassified = cat(3,unclassified,test_A(:,:,i));
     end
 end
 
@@ -156,3 +150,16 @@ end
 figure()
 plot(plot_x, plot_y, 'o')
 
+%識別できなかったシステムの固有ベクトル---------------------------------------------------------------------------------
+eigVec = [];
+for i=1: size_unclassified(1,3)
+    [eigVec(:,:,i), ~] = eig(unclassified(:,:,i));
+end
+plot_x = [];
+plot_y = [];
+for i=1: size_unclassified(1,3)
+    plot_x = [plot_x, eigVec(1,2,i)];
+    plot_y = [plot_y, eigVec(2,2,i)];
+end
+figure()
+plot(plot_x, plot_y, 'o')

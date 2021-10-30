@@ -11,18 +11,20 @@ size_a：A行列のサイズ
 time：1データあたりのサンプリング数
 samplingWidth：サンプリング幅
 
+システムの
+
 %}
 
 clear()
 trainData_num = 1000;
 size_a = 2;
-time = 20;
+time = 10;
 train_U = [];
 train_D = [];
 train_A = [];
 samplingWidth = 0.1;
 for i = 1: trainData_num
-    [u, ~, d, A] = data_gen_triangle(size_a, time, samplingWidth);
+    [u, ~, d, A] = data_gen(size_a, time, samplingWidth);
     %A行列のデータ生成
     train_A(:,:,i) = A;
     %入力データの成型
@@ -42,13 +44,13 @@ test_U = [];
 test_D = [];
 test_A = [];
 for i = 1: testData_num
-    [u, ~, d, A] = data_gen_triangle(size_a, time, samplingWidth);
+    [u, ~, d, A] = data_gen(size_a, time, samplingWidth);
     %A行列のデータ生成
     test_A(:,:,i) = A;
    %入力データの成型
     test_U = [test_U, u];
     %目標出力データの成型
-     size_u = size(u);
+    size_u = size(u);
     D = [];
     for j = 1: size_u(1,2)
         D = [D, d];
