@@ -4,9 +4,11 @@ time：1データ当たりの時間発展
 N_x：リザバーのノード数
 %}
 
-
+clear()
 %データの読み込み
-load('dataset1')
+filename = 'diag_2dim'
+load(filename)
+load(filename + "_W")
 %{
 %データのスケーリング
 data_scale = 10^-3;
@@ -28,46 +30,10 @@ N_u = trainU_size(1,1);
 N_x = 5000;
 N_y = trainD_size(1,1);
 
-%Winの設定
-inputScale = 1;
-Win = 2*inputScale*rand(N_x, N_u) - inputScale;
-
-
-%Wの設定
-density = 0.1;
-rho = 0.95;
-W = zeros(N_x); %wの初期化　任意に設定する場合はここに代入
-W = gen_randomW(N_x, density, W);
-eigv_list = eig(W); %結合重み行列wの固有値
-sp_radius = max(abs(eigv_list)); %現在のスペクトル半径（固有値の絶対値の最大値）
-W = W * rho / sp_radius;  %任意のスペクトル半径rhoに合うようにwをスケーリング
-
-%Woutの設定
-ave = 0; %平均
-sd = 1; %標準偏差
-Wout = sd*randn(N_y, N_x) + ave;
-
-%学習RC実行-------------------------------------------------------------------------------------------------------------------------------
-trainData_num = 1;
-disp("study")
-study_X = [];
-study_Y = [];
-for i = 1: trainData_num
-    u = train_U(:,:,i);
-    [y_all, x_all] = RC(Win, W, Wout, u, N_u, N_x, N_y, T_train, zeros(N_x,1));
-    %データの保存
-    study_X(:,:,i) = x_all;
-    study_Y(:,:,i) = y_all;
-end
-
-%線形回帰-----------------------------------------------------------------------------------------------------------------------------
-%線形回帰を行うためのデータを形成
-disp("linear")
-b = 0.001; %正則化パラメータ
-Wupd = Linear(study_X, train_D, b, N_x);
 
 
 %訓練RC実行（訓練誤差を求めるため）---------------------------------------------------------------------------------------------------------
+trainData_num = 1;
 disp("training")
 train_X = [];
 train_Y = [];
@@ -134,15 +100,15 @@ for i=1: T_train/time
         classified = cat(3,classified,train_A(:,:,i));
     else
         %相対誤差が10%以下ならclassifiedに分類
-        yStar = y_star(size_A(1,1),test_A(:,:,i));
+        yStar = y_star(size_A(1,1),train_A(:,:,i));
         diag_yStar = diag(yStar);
-        true = diag_yStar(index_test_label);
-        est = diag_yStar(index_pre_test, 1);
+        true = diag_yStar(index_train_label);
+        est = diag_yStar(index_pre_train, 1);
         if -0.1<=relative_error(est,true)&&relative_error(est,true)<=0.1
-            classified = cat(3,classified,test_A(:,:,i));
-            pre_test(:,i) = test_label(:,i);
+            classified = cat(3,classified,train_A(:,:,i));
+            pre_train(:,i) = train_label(:,i);
         else
-            unclassified = cat(3,unclassified,test_A(:,:,i));
+            unclassified = cat(3,unclassified,train_A(:,:,i));
         end
     end
 end

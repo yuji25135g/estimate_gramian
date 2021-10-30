@@ -6,7 +6,8 @@ N_x：リザバーのノード数
 
 
 %データの読み込み
-load('dataset1')
+filename = 'dataset1'
+load(filename)
 %{
 %データのスケーリング
 data_scale = 10^-3;
@@ -65,6 +66,10 @@ end
 disp("linear")
 b = 0.001; %正則化パラメータ
 Wupd = Linear(study_X, train_D, b, N_x);
+
+%Wを保存
+save(filename + "_W", 'Wupd', 'Win', 'W')
+
 
 
 %訓練RC実行（訓練誤差を求めるため）---------------------------------------------------------------------------------------------------------
