@@ -6,7 +6,7 @@ N_x：リザバーのノード数
 
 
 %データの読み込み
-filename = 'dataset1'
+filename = 'tri_2dim'
 load(filename)
 %{
 %データのスケーリング

@@ -12,7 +12,7 @@ function [state_x, reshape_y, index, A] = data_gen_lowTriangle(size_a, time, sam
     A = lowTriangularA_gen(size_a);
     
     %As—ñ‚©‚çó‘Ô‚ğ¶¬
-    x0 = [0.5,1]';
+    x0 = [1,1]';
     state_x = state_gen(size_a, time, A, samplingWidth, x0); 
     %ó‘Ô‚Ì•W€‰»
     %state_x = normalize(state_x);
