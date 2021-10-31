@@ -17,7 +17,7 @@ samplingWidth：サンプリング幅
 %}
 
 clear()
-trainData_num = 1400;
+trainData_num = 1200;
 size_a = 2;
 time = 10;
 train_U = [];

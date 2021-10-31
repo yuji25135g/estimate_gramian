@@ -6,7 +6,7 @@ N_x：リザバーのノード数
 
 
 %データの読み込み
-filename = 'tri_2dim'
+filename = 'diag_2dim'
 load(filename)
 %{
 %データのスケーリング
@@ -29,46 +29,57 @@ N_u = trainU_size(1,1);
 N_x = 5000;
 N_y = trainD_size(1,1);
 
-%Winの設定
-inputScale = 1;
-Win = 2*inputScale*rand(N_x, N_u) - inputScale;
 
 
-%Wの設定
-density = 0.1;
-rho = 0.95;
-W = zeros(N_x); %wの初期化　任意に設定する場合はここに代入
-W = gen_randomW(N_x, density, W);
-eigv_list = eig(W); %結合重み行列wの固有値
-sp_radius = max(abs(eigv_list)); %現在のスペクトル半径（固有値の絶対値の最大値）
-W = W * rho / sp_radius;  %任意のスペクトル半径rhoに合うようにwをスケーリング
-
-%Woutの設定
-ave = 0; %平均
-sd = 1; %標準偏差
-Wout = sd*randn(N_y, N_x) + ave;
-
-%学習RC実行-------------------------------------------------------------------------------------------------------------------------------
-trainData_num = 1;
-disp("study")
-study_X = [];
-study_Y = [];
-for i = 1: trainData_num
-    u = train_U(:,:,i);
-    [y_all, x_all] = RC(Win, W, Wout, u, N_u, N_x, N_y, T_train, zeros(N_x,1));
-    %データの保存
-    study_X(:,:,i) = x_all;
-    study_Y(:,:,i) = y_all;
+if exist(num2str(N_x) + "W", 'file')==2
+    load(num2str(N_x) + "W")
+else
+    disp('culcW')
+    %Wの設定
+    density = 0.1;
+    rho = 0.95;
+    W = zeros(N_x); %wの初期化　任意に設定する場合はここに代入
+    W = gen_randomW(N_x, density, W);
+    eigv_list = eig(W); %結合重み行列wの固有値
+    sp_radius = max(abs(eigv_list)); %現在のスペクトル半径（固有値の絶対値の最大値）
+    W = W * rho / sp_radius;  %任意のスペクトル半径rhoに合うようにwをスケーリング
+    save(num2str(N_x) + "W", 'W')
 end
 
-%線形回帰-----------------------------------------------------------------------------------------------------------------------------
-%線形回帰を行うためのデータを形成
-disp("linear")
-b = 0.001; %正則化パラメータ
-Wupd = Linear(study_X, train_D, b, N_x);
 
-%Wを保存
-save(filename + "_W", 'Wupd', 'Win', 'W')
+
+if exist(filename + "_Wupd", 'file')~=2
+    %Winの設定
+    disp('culcWin')
+    inputScale = 1;
+    Win = 2*inputScale*rand(N_x, N_u) - inputScale;
+    %Woutの設定
+    disp('culcWout')
+    ave = 0; %平均
+    sd = 1; %標準偏差
+    Wout = sd*randn(N_y, N_x) + ave;
+    %学習RC実行-------------------------------------------------------------------------------------------------------------------------------
+    trainData_num = 1;
+    disp("study")
+    study_X = [];
+    study_Y = [];
+    for i = 1: trainData_num
+        u = train_U(:,:,i);
+        [y_all, x_all] = RC(Win, W, Wout, u, N_u, N_x, N_y, T_train, zeros(N_x,1));
+        %データの保存
+        study_X(:,:,i) = x_all;
+        study_Y(:,:,i) = y_all;
+    end
+
+    %線形回帰-----------------------------------------------------------------------------------------------------------------------------
+    %線形回帰を行うためのデータを形成
+    disp("linear")
+    b = 0.001; %正則化パラメータ
+    Wupd = Linear(study_X, train_D, b, N_x);
+
+    %Wを保存
+    save(filename + "_Wupd", 'Wupd', 'Win')
+end
 
 
 
